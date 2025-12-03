@@ -173,7 +173,7 @@ class Notescreen(Screen):
         self.note_db = NoteDatabase()
         app = MDApp.get_running_app()
         mainscreen = app.root.get_screen("mainscreen")
-        if self.ids.note_content.text != '':
+        if self.ids.note_content.text != '' or not self.ids.note_content.text.strip():
             self.dialog = MDDialog(
                 title="Unsaved changes",
                 type="custom",
@@ -186,7 +186,10 @@ class Notescreen(Screen):
             
             elif specific_note[1] is not None and specific_note[1] != self.ids.note_content.text:
                 self.dialog.open()
-            
+
+            elif specific_note[1] is not None and specific_note[1] != self.ids.note_content.text and not self.ids.note_content.text.strip():
+                self.dialog.open()
+
             elif specific_note[1] is not None and specific_note[1] == self.ids.note_content.text:
                 self.ids.note_content.text = ''
                 self.manager.current = "mainscreen"
@@ -265,7 +268,7 @@ class MyApp(MDApp):
         notescreen = self.root.get_screen("notescreen")
         mainscreen = self.root.get_screen("mainscreen")
         specific_note = self.note_db.get_specific_note(notescreen.ids.top_bar.title)
-        if notescreen.ids.note_content.text != "":
+        if notescreen.ids.note_content.text != "" or not notescreen.ids.note_content.text.strip():
             if specific_note is None:
                 time = datetime.now().strftime("%d %b %Y | %I:%M %p")
                 self.note_db.add_note(notescreen.ids.top_bar.title, notescreen.ids.note_content.text, time)
@@ -284,9 +287,19 @@ class MyApp(MDApp):
                 self.root.current = "mainscreen"
                 self.root.transition.direction = "right"
             
-            elif specific_note is not None and specific_note[1] != notescreen.ids.note_content.text:
+            elif specific_note is not None and specific_note[1] != notescreen.ids.note_content.text and notescreen.ids.note_content.text != "":
                 time = datetime.now().strftime("%d %b %Y | %I:%M %p")
                 self.note_db.update_note(notescreen.ids.top_bar.title, notescreen.ids.note_content.text, time)
+                notescreen.ids.note_content.text = ''
+                mainscreen.ids.scroll.clear_widgets()
+                self.on_start()
+                self.root.current = "mainscreen"
+                self.root.transition.direction = "right"
+                instance.parent.parent.parent.parent.parent.dismiss() if instance else None
+            
+            elif specific_note is not None and specific_note[1] != notescreen.ids.note_content.text and not notescreen.ids.note_content.text.strip():
+                time = datetime.now().strftime("%d %b %Y | %I:%M %p")
+                self.note_db.update_note(notescreen.ids.top_bar.title, f"", time)
                 notescreen.ids.note_content.text = ''
                 mainscreen.ids.scroll.clear_widgets()
                 self.on_start()
