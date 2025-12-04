@@ -11,6 +11,7 @@ from datetime import *
 from note_database import NoteDatabase
 from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
+from kivy.core.window import Window
 
 Builder.load_string(""" 
 
@@ -208,6 +209,7 @@ class MyApp(MDApp):
         sm = ScreenManager()
         sm.add_widget(Mainscreen(name="mainscreen"))
         sm.add_widget(Notescreen(name="notescreen"))
+        Window.size = (430,600)
         #sm.current = "notescreen"
         self.note_db = NoteDatabase()
         menu_item =[{"viewclass": "OneLineListItem", 
