@@ -224,7 +224,7 @@ class MyApp(MDApp):
     def show_about(self):
         self.dialog = MDDialog(
             title="About",
-            text="Simple Notes — a minimal, offline note-taking app built with KivyMD.\nCreate, edit, and delete notes locally.\n Version-1.0",
+            text="Simple Notes — a minimal, offline note-taking app built with KivyMD.\nCreate, edit, and delete notes locally.\n Version-1.5",
             buttons=[MDRectangleFlatButton(text="CLOSE", on_release=lambda x: self.dialog.dismiss())],
         )
         self.dialog.open()
